@@ -1,0 +1,109 @@
+import React , {Component} from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+//import { TimePickerComponent } from '@syncfusion/ej2-react-calendars';
+import TimePicker from 'react-time-picker';
+
+class Input extends Component{
+    state={
+        task:'',
+        taskList:[],
+        startTime:"10:00",
+        endTime:"10:00",
+        diff:0
+      };
+      onChange = event => 
+      {
+          this.setState({ starttime:event.target.value })
+      }
+    //   onChange = starttime => 
+    //   {
+    //       this.setState({ starttime })
+    //   }
+      onChangeEnd = event => 
+      {
+          this.setState({ endtime:event.target.value })
+      }
+    //   onChangeEnd = endtime => 
+    //   {
+    //       this.setState({ endtime})
+    //   }
+      inputChangeHandler = (input)=>{
+          this.setState({
+            task: input
+          });
+      }
+      btnAddHandler = (inputTask,inputTime,endtime)=>{
+       
+        let item = {
+          value: inputTask,
+          starttime: inputTime,
+          endtime:endtime,
+          diff:endtime-inputTime
+        }
+        let newList = [
+            ...this.state.taskList,
+            item
+          ]
+        
+          this.setState({
+            taskList:newList,
+            task: '',
+
+          })
+      let day=new Date();
+      let i=0;
+      let lenOfTasks;
+      let isPresent=0;
+      this.user=JSON.parse(localStorage.getItem(this.props.username));
+      lenOfTasks=this.user.today.length;
+      if(lenOfTasks===7)
+      {
+        this.user.today.shift()
+      }
+      console.log(this.user.today)
+      console.log(lenOfTasks)
+      //i=lenOfTasks
+       while(i<lenOfTasks){
+      //   if(day!=this.user.today[i].date)
+         i++;
+      //   else
+      //   {
+      //     isPresent=1;
+      //     break;
+      //   }
+       }
+      
+       this.user.today[i-1].date=23;
+       this.user.today[i-1].startTime.push(this.state.starttime)
+       this.user.today[i-1].endTime.push(this.state.endtime)
+       this.user.today[i-1].tasks.push(this.state.task)
+     localStorage.setItem(this.props.username,JSON.stringify(this.user))
+      
+
+      }
+      
+
+
+    render()
+    {
+      this.data=JSON.parse(localStorage.getItem(this.props.username));
+        return (
+            <div className="container">
+            <form onSubmit={this.handleFormSubmit}>
+                Activity<input className="inputField" type="text" placeholder="Enter the Activity" onChange={this.handleChangeActivity} value={this.state.activity}></input><br/><br/>
+                Start Date :<DatePicker selected={this.state.startDate} value={this.state.startDate} onChange={this.handleChange} /><br/><br/>
+                Start Time:<TimePicker id="timepicker" placeholder="Select a Time" width="195" value={this.state.startTime} onChange={this.handleTime} /><br/><br/>
+                End Time:<TimePicker id="timepicker" placeholder="Select a Time" width="195" value={this.state.endTime} onChange={this.handleTimeEnd} /><br/><br/>
+     
+                <button className="submit" type="submit"  id="submit">Submit</button><br/><br/>
+            </form>
+
+            </div>
+        )
+    }
+    
+    
+}
+
+export default Tracker;
