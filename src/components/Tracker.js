@@ -1,13 +1,12 @@
 import React , {Component} from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import SideDrawer from './sidedrawer';
+import Backdrop from './backdrop';
+import Toolbar from './toolbar';
 import { TimePickerComponent } from '@syncfusion/ej2-react-calendars';
 import moment from 'moment';
-import {
-  Container, Col, Form,
-  FormGroup, Label, Input,
-  Button,
-} from 'reactstrap';
+
 
 
 
@@ -19,13 +18,24 @@ class Tracker extends Component{
     this.state={
         activity:'',
         time:"",
-        endTime:"",
-        startTime:"",
-        startDate:null,
-        reder:0
+        endTime:"11:00",
+        startTime:"12:00",
+        startDate:new Date(),
+        reder:0,
+        sidedraweropen:false
       };
       this.submitHandler=this.submitHandler.bind(this);
       
+    }
+
+    drawerHandler = () => {
+      this.setState((prevState)=>{
+        return{sidedraweropen:!prevState.sidedraweropen}
+      });
+    }
+  
+    backdropHandler = () => {
+      this.setState({sidedraweropen:false});
     }
     
 
@@ -103,19 +113,36 @@ class Tracker extends Component{
       
     render()
     {
+
+      let sidedrawer;
+      let backdrop;
+  
+      if(this.state.sidedraweropen)
+      {
+        sidedrawer=<SideDrawer/>
+        backdrop=<Backdrop click={this.backdropHandler}/>
+      }
+
       let user1=JSON.parse(localStorage.getItem(this.props.username))
-      {console.log(this.state.startDate)}
+      
       
         return(
+
+
             <div>
-                
+                <div>
+                <Toolbar drawerClicked={this.drawerHandler}/>
+                  {sidedrawer}
+                  {backdrop}
+                </div>
+                <div>
                 Activity<input className="inputField" type="text" placeholder="Enter the Activity" onChange={(event)=>this.handleChangeActivity(event)} value={this.state.activity}></input><br/><br/>
                 Start Date :<DatePicker selected={this.state.startDate}   onChange={this.handleChange} /><br/><br/>
                 Start Time:<TimePickerComponent    onChange={this.handleTime} value={this.state.startTime} /><br/><br/>
                 End Time:<TimePickerComponent  value={this.state.endTime} onChange={this.handleTimeEnd} /><br/><br/>
                 <button id="btn1" type="submit" onClick={this.submitHandler} >Add</button>
 
-        
+                </div>
                
                  <ul>
                 {     

@@ -10,8 +10,7 @@ import News from './components/news';
 import NewsDescription from './components/newsDescription';
 import Dashboard from './components/dashboard';
 import DashboardWrapper from './components/dashboardWrapper';
-import Toolbar from './components/toolbar';
-import SideDrawer from './components/sidedrawer';
+
 
 class App extends Component {
 toggle = false;
@@ -19,7 +18,8 @@ toggle = false;
     super(props);
     this.state = {
       username: null,
-      password: null
+      password: null,
+
     };
   }
   handleNewUser(e) {
@@ -38,26 +38,26 @@ toggle = false;
   {
     window.history.back();
   }
+
   render() {
+  
     return (
-      <Router>
+      
         <div>
           
 
-          {/* {' '}
-           <ButtonToggle color="primary" onClick={()=>this.handleGoBack}>Back</ButtonToggle> *
+          {' '}
+           {/* <ButtonToggle color="primary" onClick={()=>this.handleGoBack}>Back</ButtonToggle>  */}
           <Route path="/" exact component={DashboardWrapper} />
           <Route path="/dashboard" exact component={Dashboard} />
           <Route path="/dashboard/login" exact component={Signup} />
           <Route path="/dashboard/login/activitytracker" exact component={Tracker}/>
           <Route path="/dashboard/news" exact component={News} />
           <Route path="/dashboard/news/:id" component={NewsDescription} />
-          <Route path='/dashboard/login/changepassword' component={ChangePassword}/> */}
-            {/* <Route path="/" exact component={Signup}/>   */}
-          <Toolbar/>
-          <SideDrawer/>
+            
+         
         </div>
-      </Router>
+      
     );
   }
 }

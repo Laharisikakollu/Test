@@ -1,8 +1,6 @@
 import React from 'react';
-
-
 import Tracker from './Tracker';
-import './signup.css';
+// import './signup.css';
 class SignUp extends React.Component {
     constructor(props)
     {
@@ -42,7 +40,7 @@ class SignUp extends React.Component {
     }
 
     handleLogout = (e) => {
-        this.props.history.goBack();
+        // this.props.history.goBack();
         this.setState({
             username: null,
             password: null,
@@ -57,17 +55,19 @@ render()
 
     return (
         <div className="mainContainer">
-            <h1 className="Text">Task Tracker</h1>
+            
             {/* UserName:<input type="text" className="inputField" onChange={this.handleChange}></input><br></br><br></br>
             Password:<input type="password"   className="inputField" onChange={this.handlePassword}></input>
             <button  className="Signupbutton" onClick={this.handleSubmit} >signup</button> */}
             {this.state.click ? 
             (<div>
-                <button onClick={this.handleLogout}>Logout</button>
+                {/* <button onClick={this.handleLogout}>Logout</button> */}
             <Tracker username={this.state.username} password={this.state.password}/>
+            
             </div>)
             :
             (<div>
+                <h1 className="Text">Task Tracker</h1>
                 UserName:<input type="text" className="inputField" onChange={this.handleChange}></input><br></br><br></br>
             Password:<input type="password"   className="inputField" onChange={this.handlePassword}></input>
             <button  className="Signupbutton" onClick={this.handleSubmit} >SignIn</button>

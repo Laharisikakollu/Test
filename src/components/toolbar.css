@@ -1,8 +1,8 @@
 .toolbar{
-    position:fixed;
+    position: relative;;
     width:100%;
-    background: rgb(236, 50, 50);
-    height: 56px;
+    background:red;
+    height: 46px;
 }
 
 .navigation{
