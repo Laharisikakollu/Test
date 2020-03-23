@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 import Tracker from './Tracker';
 import './signup.css';
 class SignUp extends React.Component {
@@ -9,9 +10,10 @@ class SignUp extends React.Component {
         this.state={
             username:'',
             password:'',
-            List:[{date:[],activity:[],endTime:[],
+            List:[{date:[''],activity:[],endTime:[],
             startTime:[]}],
             submit:false,
+            click:false
             
         }
         this.handleFormSubmit = this.handleSubmit.bind(this);
@@ -28,6 +30,8 @@ class SignUp extends React.Component {
     handleSubmit = (e)=> {
 
         this.setState({submit:true,
+            click:!this.state.click,
+            
                    })
 
         if(!localStorage.getItem(this.state.username))
@@ -37,6 +41,15 @@ class SignUp extends React.Component {
     }
     }
 
+    handleLogout = (e) => {
+        this.props.history.goBack();
+        this.setState({
+            username: null,
+            password: null,
+            click: !this.state.click
+        });
+    }
+
 
 render()
 {
@@ -44,11 +57,23 @@ render()
 
     return (
         <div className="mainContainer">
-            <h1 className="Text">SIGN UP</h1>
-            UserName:<input type="text" className="inputField" onChange={this.handleChange}></input><br></br><br></br>
+            <h1 className="Text">Task Tracker</h1>
+            {/* UserName:<input type="text" className="inputField" onChange={this.handleChange}></input><br></br><br></br>
             Password:<input type="password"   className="inputField" onChange={this.handlePassword}></input>
-            <button  className="Signupbutton" onClick={this.handleSubmit} >signup</button>
-            {this.state.submit ? <Tracker username={this.state.username}></Tracker>:null}
+            <button  className="Signupbutton" onClick={this.handleSubmit} >signup</button> */}
+            {this.state.click ? 
+            (<div>
+                <button onClick={this.handleLogout}>Logout</button>
+            <Tracker username={this.state.username} password={this.state.password}/>
+            </div>)
+            :
+            (<div>
+                UserName:<input type="text" className="inputField" onChange={this.handleChange}></input><br></br><br></br>
+            Password:<input type="password"   className="inputField" onChange={this.handlePassword}></input>
+            <button  className="Signupbutton" onClick={this.handleSubmit} >SignIn</button>
+
+                </div>)
+            }
    
            
             

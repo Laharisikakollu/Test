@@ -1,0 +1,52 @@
+.toolbar{
+    position:fixed;
+    width:100%;
+    background: rgb(236, 50, 50);
+    height: 56px;
+}
+
+.navigation{
+    display: flex;
+    height: 100%;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.menu a{
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+}
+
+.menu {
+    margin-left: 1rem;
+}
+
+.items ul{
+    list-style: none;
+    margin:0;
+    padding: 0;
+    display: flex;
+}
+
+.spacer{
+    flex:1;
+}
+
+.items li{
+    list-style: none;
+    margin:0;
+    padding: 0 0.5rem;
+    display: flex;
+}
+
+
+.items{
+    color:white;
+    text-decoration: none;
+}
+
+.items a:hover,
+.items a:active{
+    color:white;
+}

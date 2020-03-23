@@ -1,31 +1,64 @@
 import React, { Component } from 'react';
 import Signup from './components/signup';
-// import Tracker from '../src/components/Tracker';
+ import Tracker from '../src/components/Tracker';
+ import {  withRouter } from "react-router-dom";
+ import { ButtonToggle } from 'reactstrap';
 import './App.css';
-
-
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-import Tracker from './components/Tracker';
-
-
-
+import history from 'history';
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import News from './components/news';
+import NewsDescription from './components/newsDescription';
+import Dashboard from './components/dashboard';
+import DashboardWrapper from './components/dashboardWrapper';
+import Toolbar from './components/toolbar';
+import SideDrawer from './components/sidedrawer';
 
 class App extends Component {
+toggle = false;
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: null,
+      password: null
+    };
+  }
+  handleNewUser(e) {
+    e.preventDefault();
+  }
+  handleLogin(event) {
+    event.preventDefault();
+    this.toggle = !this.toggle;
+    this.setState({ username: this.state.username });
+    console.log("login" + this.event.newUserId);
+  }
+  componentDidMount() {
+    this.props.history.push('')
+  }
+  handleGoBack()
+  {
+    window.history.back();
+  }
   render() {
     return (
-      <div className="App">
-   
-      <Signup/>
-       
-      </div>
+      <Router>
+        <div>
+          
 
-  );
+          {/* {' '}
+           <ButtonToggle color="primary" onClick={()=>this.handleGoBack}>Back</ButtonToggle> *
+          <Route path="/" exact component={DashboardWrapper} />
+          <Route path="/dashboard" exact component={Dashboard} />
+          <Route path="/dashboard/login" exact component={Signup} />
+          <Route path="/dashboard/login/activitytracker" exact component={Tracker}/>
+          <Route path="/dashboard/news" exact component={News} />
+          <Route path="/dashboard/news/:id" component={NewsDescription} />
+          <Route path='/dashboard/login/changepassword' component={ChangePassword}/> */}
+            {/* <Route path="/" exact component={Signup}/>   */}
+          <Toolbar/>
+          <SideDrawer/>
+        </div>
+      </Router>
+    );
   }
 }
-
-export default App;
+export default withRouter(App);

@@ -2,7 +2,12 @@ import React , {Component} from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { TimePickerComponent } from '@syncfusion/ej2-react-calendars';
-import TimePicker from 'react-time-picker';
+import moment from 'moment';
+import {
+  Container, Col, Form,
+  FormGroup, Label, Input,
+  Button,
+} from 'reactstrap';
 
 
 
@@ -16,10 +21,8 @@ class Tracker extends Component{
         time:"",
         endTime:"",
         startTime:"",
-        startDate:"",
+        startDate:null,
         reder:0
-      
-
       };
       this.submitHandler=this.submitHandler.bind(this);
       
@@ -46,34 +49,49 @@ class Tracker extends Component{
       submitHandler(){
        
         console.log("submitentered")
-        let day=new Date();
+        
         let i=0;
+        let isbreak=0;
         let lenOfactivity;
      
        this.user=JSON.parse(localStorage.getItem(this.props.username))
         
-
+        
       lenOfactivity=this.user.List.length;
+      while(i<lenOfactivity){
+        if(moment(this.state.startDate).format('L')!==moment(this.user.List[i].date[0]).format('L'))
+       { i++;}
+       else{
+         isbreak=1;
+         break; 
+       }
+     
+      }
 
       if(lenOfactivity===7)
       {
-        this.state.user.List.shift()
+        this.user.List.shift()
       }
      
      
-       while(i<lenOfactivity){
-     
-         i++;
-      
-       }
       
       
-       //this.state.user.List[i-1].activity.push(this.state.activity)
-       this.user.List[i-1].startTime.push(this.state.endTime-this.state.startTime)
-       this.user.List[i-1].endTime.push(this.state.endTime)
-       this.user.List[i-1].activity.push(this.state.activity)
-       this.user.List[i-1].date.push(this.state.startDate)
+      if(isbreak===0)
+       
+        {
 
+          this.user.List.push({date:[this.state.startDate],activity:[this.state.activity],startTime:[this.state.startTime],endTime:[this.state.endTime]});
+      
+      } 
+
+      else
+      {
+        
+        this.user.List[lenOfactivity===7?i-1: i].startTime.push(this.state.startTime)
+        this.user.List[lenOfactivity===7?i-1: i].endTime.push(this.state.endTime)
+        this.user.List[lenOfactivity===7?i-1: i].activity.push(this.state.activity)
+         this.user.List[lenOfactivity===7?i-1: i].date.push(this.state.startDate)
+      }
      localStorage.setItem(this.props.username,JSON.stringify(this.user))
 
     
@@ -86,26 +104,31 @@ class Tracker extends Component{
     render()
     {
       let user1=JSON.parse(localStorage.getItem(this.props.username))
-      
+      {console.log(this.state.startDate)}
       
         return(
             <div>
                 
                 Activity<input className="inputField" type="text" placeholder="Enter the Activity" onChange={(event)=>this.handleChangeActivity(event)} value={this.state.activity}></input><br/><br/>
-                Start Date :<DatePicker selected={this.state.startDate} value={this.state.startDate} dateFormat="dd-MM-yyyy" onChange={this.handleChange} /><br/><br/>
+                Start Date :<DatePicker selected={this.state.startDate}   onChange={this.handleChange} /><br/><br/>
                 Start Time:<TimePickerComponent    onChange={this.handleTime} value={this.state.startTime} /><br/><br/>
                 End Time:<TimePickerComponent  value={this.state.endTime} onChange={this.handleTimeEnd} /><br/><br/>
                 <button id="btn1" type="submit" onClick={this.submitHandler} >Add</button>
-                 
-                 
+
+        
+               
                  <ul>
-                {     user1.List.map((item,key)=>{
-                
-                return item.activity.map((item1,key)=>{
-                return <li>Activity:{item1}&nbsp;&nbsp;Date:{item.date[key]}&nbsp;&nbsp;Duration:{item.startTime[key]}</li>
-                })
-                
-                
+                {     
+                  user1.List.map((item,key)=>{
+                    const date = item.date[0];
+
+                return  ( 
+                <div> {date && <span>{moment(date).format('L')}</span>}
+                 {item.activity.map((item1,key)=>{
+                return <li>Activity:{item1}&nbsp;&nbsp;&nbsp;&nbsp;Duration:{moment(item.startTime[key]).diff(moment(item.endTime[key]))}</li>
+                })}</div>
+                )
+              
                 }
               )}
               </ul> 
