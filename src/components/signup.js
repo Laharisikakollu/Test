@@ -1,6 +1,7 @@
 import React from 'react';
-import Tracker from './Tracker';
+import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBInput } from 'mdbreact';
 // import './signup.css';
+import SideDrawer from './sidedrawer';
 class SignUp extends React.Component {
     constructor(props)
     {
@@ -8,7 +9,7 @@ class SignUp extends React.Component {
         this.state={
             username:'',
             password:'',
-            List:[{date:[''],activity:[],endTime:[],
+            List:[{date:[],activity:[],endTime:[],dur:[],
             startTime:[]}],
             submit:false,
             click:false
@@ -62,16 +63,24 @@ render()
             {this.state.click ? 
             (<div>
                 {/* <button onClick={this.handleLogout}>Logout</button> */}
-            <Tracker username={this.state.username} password={this.state.password}/>
+                <SideDrawer username={this.state.username} onLogout={this.handleLogout}></SideDrawer>
             
             </div>)
             :
             (<div>
-                <h1 className="Text">Task Tracker</h1>
-                UserName:<input type="text" className="inputField" onChange={this.handleChange}></input><br></br><br></br>
-            Password:<input type="password"   className="inputField" onChange={this.handlePassword}></input>
-            <button  className="Signupbutton" onClick={this.handleSubmit} >SignIn</button>
-
+                <MDBContainer>
+                    <MDBRow>
+                    <MDBCol md="6">
+                        <form>
+        <p className="h5 text-center mb-4" >Task Tracker</p>
+               
+                <MDBInput label="Username"icon="user" group type="text" className="inputField" onChange={this.handleChange}></MDBInput><br></br><br></br>
+           <MDBInput label="Password" icon="lock" group type="password"   className="inputField" onChange={this.handlePassword}></MDBInput>
+            <MDBBtn color="primary" className="Signupbutton" onClick={this.handleSubmit} >SignIn</MDBBtn>
+            </form>
+        </MDBCol>
+        </MDBRow>
+        </MDBContainer>
                 </div>)
             }
    

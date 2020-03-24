@@ -2,18 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import SignUp from './components/signup';
+// import SignUp from './components/signup';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Router } from 'react-router';
+// import { Router } from 'react-router';
 // const createHistory=require("history").createBrowserHistory;
-import { createBrowserHistory } from 'history'
+// import { createBrowserHistory } from 'history'
 // const history = createHistory();
-const history = createBrowserHistory();
+// const history = createBrowserHistory();
+import '@fortawesome/fontawesome-free/css/all.min.css'; import
+'bootstrap-css-only/css/bootstrap.min.css'; import
+'mdbreact/dist/css/mdb.css';
+import {BrowserRouter} from 'react-router-dom';
+const app = (<BrowserRouter>  <App />  </BrowserRouter>)
 ReactDOM.render(
-    <Router history={history}>
-        <App />
-    </Router>
+    
+       app
+   
     
     ,
     document.getElementById('root'));

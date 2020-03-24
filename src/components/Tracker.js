@@ -2,8 +2,11 @@ import React , {Component} from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import SideDrawer from './sidedrawer';
-import Backdrop from './backdrop';
-import Toolbar from './toolbar';
+import './Tracker.css';
+import { MDBTable, MDBTableBody, MDBTableHead } from 'mdbreact';
+
+import Output from '../components/Output/Output';
+
 import { TimePickerComponent } from '@syncfusion/ej2-react-calendars';
 import moment from 'moment';
 
@@ -11,39 +14,21 @@ import moment from 'moment';
 
 
 class Tracker extends Component{
-  constructor(props)
-  {
-
-    super(props)
-    this.state={
+ 
+    state={
         activity:'',
-        time:"",
         endTime:"11:00",
         startTime:"12:00",
         startDate:new Date(),
         reder:0,
-        sidedraweropen:false
+        displayActivities: false,
+        activitydate:new Date(),
+        display:new Date()
       };
-      this.submitHandler=this.submitHandler.bind(this);
-      
-    }
-
-    drawerHandler = () => {
-      this.setState((prevState)=>{
-        return{sidedraweropen:!prevState.sidedraweropen}
-      });
-    }
-  
-    backdropHandler = () => {
-      this.setState({sidedraweropen:false});
-    }
-    
-
      
-
-      handleChangeActivity = event => 
+      handleChangeActivity =(input)=> 
       {
-          this.setState({ activity:event.target.value })
+          this.setState({ activity:input })
       } 
 
       handleChange= startDate => 
@@ -56,73 +41,83 @@ class Tracker extends Component{
       handleTime = event => this.setState({ endTime:event.target.value})
    
       
-      submitHandler(){
-       
-        console.log("submitentered")
-        
-        let i=0;
-        let isbreak=0;
-        let lenOfactivity;
-     
-       this.user=JSON.parse(localStorage.getItem(this.props.username))
-        
-        
-      lenOfactivity=this.user.List.length;
-      while(i<lenOfactivity){
-        if(moment(this.state.startDate).format('L')!==moment(this.user.List[i].date[0]).format('L'))
-       { i++;}
-       else{
-         isbreak=1;
-         break; 
-       }
-     
-      }
-
-      if(lenOfactivity===7)
+      handleChangedateActivity = activitydate=>
       {
-        this.user.List.shift()
+     
+        this.setState({activitydate:activitydate})
+        console.log(this.state)
       }
-     
-     
-      
-      
-      if(isbreak===0)
+      onShowActivitiesHandler = () => {
+        this.setState({
+            displayActivities: !this.state.displayActivities
+        })
+      }
+      prevHadler=()=>{
+         let datevar=this.state.activitydate
+         datevar.setDate(datevar.getDate()-1)
+         console.log(datevar)
+         this.setState({activitydate:datevar})
+         let currdate=`${this.state.activitydate.getMonth() + 1}/${this.state.activitydate.getDate()}/${this.state.activitydate.getFullYear()}`
+         console.log(currdate)
+         this.setState({display: currdate})
+
+
+      }
+      nextHadler=()=>{
+        let datevar=this.state.activitydate
+        datevar.setDate(datevar.getDate()+1)
+        this.setState({activitydate:datevar})
+        let currdate=`${this.state.activitydate.getMonth() + 1}/${this.state.activitydate.getDate()}/${this.state.activitydate.getFullYear()}`
+        console.log(currdate)
+         this.setState({display: currdate})
+
+     }
+
+     submitHandler = (inputTask,inputTime,endtime)=>{
        
-        {
-
-          this.user.List.push({date:[this.state.startDate],activity:[this.state.activity],startTime:[this.state.startTime],endTime:[this.state.endTime]});
+      this.setState({
+        displayActivities: true
+    })
+      console.log("submitentered")
       
-      } 
+      let i=0;
+     
+      let lenOfactivity;
+   
+     this.user=JSON.parse(localStorage.getItem(this.props.username))
+      
+      
+    lenOfactivity=this.user.List.length;
 
-      else
-      {
-        
-        this.user.List[lenOfactivity===7?i-1: i].startTime.push(this.state.startTime)
-        this.user.List[lenOfactivity===7?i-1: i].endTime.push(this.state.endTime)
-        this.user.List[lenOfactivity===7?i-1: i].activity.push(this.state.activity)
-         this.user.List[lenOfactivity===7?i-1: i].date.push(this.state.startDate)
-      }
-     localStorage.setItem(this.props.username,JSON.stringify(this.user))
+    if(lenOfactivity===7)
+    {
+      this.user.List.shift()
+    }
+   
+    while(i<lenOfactivity)
+    {i++;}
+   
+      
 
+      
+      this.user.List[i-1].startTime.push(this.state.startTime)
+      this.user.List[i-1].endTime.push(this.state.endTime)
+      this.user.List[i-1].activity.push(this.state.activity)
+      this.user.List[i-1].dur.push((this.state.endTime-this.state.startTime)/60000)
+      this.user.List[i-1].date.push(moment(this.state.startDate).format('L'));
+   
+   localStorage.setItem(this.props.username,JSON.stringify(this.user))
+
+  
+   this.setState({reder:1})
     
-     this.setState({reder:1})
-      
 
-      }
+    }
 
-      
     render()
     {
 
-      let sidedrawer;
-      let backdrop;
-  
-      if(this.state.sidedraweropen)
-      {
-        sidedrawer=<SideDrawer/>
-        backdrop=<Backdrop click={this.backdropHandler}/>
-      }
-
+     
       let user1=JSON.parse(localStorage.getItem(this.props.username))
       
       
@@ -130,37 +125,41 @@ class Tracker extends Component{
 
 
             <div>
-                <div>
-                <Toolbar drawerClicked={this.drawerHandler}/>
-                  {sidedrawer}
-                  {backdrop}
-                </div>
-                <div>
-                Activity<input className="inputField" type="text" placeholder="Enter the Activity" onChange={(event)=>this.handleChangeActivity(event)} value={this.state.activity}></input><br/><br/>
-                Start Date :<DatePicker selected={this.state.startDate}   onChange={this.handleChange} /><br/><br/>
-                Start Time:<TimePickerComponent    onChange={this.handleTime} value={this.state.startTime} /><br/><br/>
-                End Time:<TimePickerComponent  value={this.state.endTime} onChange={this.handleTimeEnd} /><br/><br/>
-                <button id="btn1" type="submit" onClick={this.submitHandler} >Add</button>
-
-                </div>
+                
                
-                 <ul>
-                {     
-                  user1.List.map((item,key)=>{
-                    const date = item.date[0];
-
-                return  ( 
-                <div> {date && <span>{moment(date).format('L')}</span>}
-                 {item.activity.map((item1,key)=>{
-                return <li>Activity:{item1}&nbsp;&nbsp;&nbsp;&nbsp;Duration:{moment(item.startTime[key]).diff(moment(item.endTime[key]))}</li>
-                })}</div>
-                )
+                <div>
+                Activity<input className="Act" type="text" placeholder="Enter the Activity" onChange={(event)=>this.handleChangeActivity(event.target.value)}></input><br/><br/>
+                Start Date :<DatePicker dateFormat='dd-MM-yyyy' selected={this.state.startDate} value={this.state.startDate}  onChange={this.handleChange} /><br/><br/>
+                Start Time:<TimePickerComponent    value={this.state.startTime} onChange={this.handleTimeEnd} /><br/><br/>
+                End Time:<TimePickerComponent  value={this.state.endTime} onChange={this.handleTime} /><br/><br/>
+                <button id="btn1" type="submit" onClick={() => this.submitHandler(this.state.activity,this.state.startTime,this.state.endTime)} >Add</button>
+              </div>
+                <button 
+                onClick={() => this.onShowActivitiesHandler()}>{!this.state.displayActivities ? 'Show Activities' : 'Close Activities'}</button>
+              {this.state.displayActivities ?
+              <MDBTable>
+              <MDBTableHead>
+                <tr>
+                  <td><button onClick={()=>this.prevHadler()}>prev</button></td>
+                  <td colSpan="3"><DatePicker id="date" dateFormat='dd-MM-yyyy' selected={this.state.activitydate} value={this.state.activitydate} onChange={this.handleChangedateActivity} /><br/><br/> </td>
+                  <td><button onClick={()=>this.nextHadler()}>next</button></td>
+                </tr>
+              <tr>
+                        <th>S.No</th>
+                        <th>Task</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Duration</th>
+                </tr>
+                </MDBTableHead>
               
-                }
-              )}
-              </ul> 
-            </div>
+              <Output date={this.state.display} username={this.props.username}/>
+              </MDBTable>:null}
+              </div>
+            
+            
         )
     }
 }
-export default Tracker
+export default Tracker;
+

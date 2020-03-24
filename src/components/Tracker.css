@@ -1,0 +1,24 @@
+.Act{
+    margin-top: 100px;
+}
+
+table,th,td{
+    border:1px solid black
+}
+table{
+    border-collapse: collapse;
+    align-content: center;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+th,td{
+    padding: 15px;
+    text-align: center;
+}
+#t1
+{
+    border: ivory;
+
+}
+
